@@ -1,8 +1,9 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, Outlet, useNavigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext.jsx';
 import BottomNav from './components/BottomNav.jsx';
 import LoginPage from './pages/LoginPage.jsx';
+import VerifyEmailPage from './pages/VerifyEmailPage.jsx';
 import DashboardPage from './pages/DashboardPage.jsx';
 import ExpensesPage from './pages/ExpensesPage.jsx';
 import BudgetsPage from './pages/BudgetsPage.jsx';
@@ -59,6 +60,15 @@ function ProtectedLayout() {
 
   if (!user) {
     return <Navigate to="/login" replace />;
+  }
+
+  // Email/password users who haven't verified yet
+  if (user.email_verified === false) {
+    return (
+      <div className="page" style={{ display: 'flex', flexDirection: 'column' }}>
+        <VerifyEmailPage />
+      </div>
+    );
   }
 
   return (

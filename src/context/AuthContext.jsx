@@ -94,7 +94,8 @@ export function AuthProvider({ children }) {
     localStorage.setItem('accessToken', data.accessToken);
     localStorage.setItem('refreshToken', data.refreshToken);
     setUser(data.user);
-    processRecurring();
+    // Don't process recurring for unverified accounts
+    if (data.user.email_verified) processRecurring();
     return data.user;
   }, [processRecurring]);
 
@@ -146,10 +147,21 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
+  // ─── Email Verification ────────────────────────────────────
+  const verifyEmail = useCallback(async (code) => {
+    await client.post('/api/auth/verify-email', { code });
+    setUser(prev => prev ? { ...prev, email_verified: true } : prev);
+    processRecurring();
+  }, [processRecurring]);
+
+  const resendVerification = useCallback(async () => {
+    await client.post('/api/auth/resend-verification');
+  }, []);
+
   const clearAutoLog = useCallback(() => setAutoLogResult(null), []);
 
   return (
-    <AuthContext.Provider value={{ user, loading, signInWithApple, signInWithEmail, signUp, signOut, signOutAll, devSignIn, autoLogResult, clearAutoLog }}>
+    <AuthContext.Provider value={{ user, loading, signInWithApple, signInWithEmail, signUp, signOut, signOutAll, devSignIn, verifyEmail, resendVerification, autoLogResult, clearAutoLog }}>
       {children}
     </AuthContext.Provider>
   );
