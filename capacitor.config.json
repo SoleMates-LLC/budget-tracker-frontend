@@ -1,0 +1,8 @@
+{
+  "appId": "com.eifb.budgettracker",
+  "appName": "eIFB Budget",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  }
+}
