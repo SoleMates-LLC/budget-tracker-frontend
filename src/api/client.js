@@ -26,7 +26,8 @@ client.interceptors.response.use(
     const originalRequest = error.config;
 
     const isDevBypass = localStorage.getItem('accessToken') === 'dev-token';
-    if (error.response?.status === 401 && !originalRequest._retry && !isDevBypass) {
+    const isAuthEndpoint = originalRequest.url?.includes('/api/auth/');
+    if (error.response?.status === 401 && !originalRequest._retry && !isDevBypass && !isAuthEndpoint) {
       if (isRefreshing) {
         // Queue the request until the token is refreshed
         return new Promise((resolve, reject) => {
