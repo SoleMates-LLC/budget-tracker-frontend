@@ -352,7 +352,11 @@ function DebtForm({ initial, recurring, onSave, onClose }) {
 
   const [name, setName]                   = useState(initial?.name || '');
   const [debtType, setDebtType]           = useState(initial?.debt_type || 'other');
-  const [startDate, setStartDate]         = useState(initial?.start_date ? initial.start_date.slice(0, 10) : '');
+  const [startDate, setStartDate]         = useState(() => {
+    if (!initial?.start_date) return '';
+    const s = typeof initial.start_date === 'string' ? initial.start_date : initial.start_date.toISOString();
+    return s.slice(0, 10);
+  });
   const [loanTermMonths, setLoanTermMonths] = useState(initial?.loan_term_months ? String(initial.loan_term_months) : '');
   const [currentBalance, setCurrentBalance] = useState(initial ? String(initial.current_balance) : '');
   const [originalBalance, setOriginalBalance] = useState(initial ? String(initial.original_balance) : '');
@@ -658,7 +662,12 @@ function DebtCard({ debt, onEdit, confirmDelete, setConfirmDelete, onDelete }) {
       {/* Loan term info */}
       {(debt.start_date || debt.loan_term_months) && (() => {
         const termMonths = debt.loan_term_months ? parseInt(debt.loan_term_months) : null;
-        const startD = debt.start_date ? new Date(debt.start_date + 'T00:00:00') : null;
+        const startD = (() => {
+          if (!debt.start_date) return null;
+          const s = typeof debt.start_date === 'string' ? debt.start_date : debt.start_date.toISOString();
+          const d = new Date(s.slice(0, 10) + 'T00:00:00');
+          return isNaN(d.getTime()) ? null : d;
+        })();
         const now = new Date();
         const monthsElapsed = startD
           ? Math.max(0, (now.getFullYear() - startD.getFullYear()) * 12 + (now.getMonth() - startD.getMonth()))
