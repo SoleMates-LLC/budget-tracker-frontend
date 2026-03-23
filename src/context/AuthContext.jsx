@@ -158,10 +158,19 @@ export function AuthProvider({ children }) {
     await client.post('/api/auth/resend-verification');
   }, []);
 
+  // ─── Forgot / Reset Password ──────────────────────────────
+  const forgotPassword = useCallback(async (email) => {
+    await client.post('/api/auth/forgot-password', { email });
+  }, []);
+
+  const resetPassword = useCallback(async ({ email, code, newPassword }) => {
+    await client.post('/api/auth/reset-password', { email, code, newPassword });
+  }, []);
+
   const clearAutoLog = useCallback(() => setAutoLogResult(null), []);
 
   return (
-    <AuthContext.Provider value={{ user, loading, signInWithApple, signInWithEmail, signUp, signOut, signOutAll, devSignIn, verifyEmail, resendVerification, autoLogResult, clearAutoLog }}>
+    <AuthContext.Provider value={{ user, loading, signInWithApple, signInWithEmail, signUp, signOut, signOutAll, devSignIn, verifyEmail, resendVerification, forgotPassword, resetPassword, autoLogResult, clearAutoLog }}>
       {children}
     </AuthContext.Provider>
   );
