@@ -160,7 +160,6 @@ export default function LoginPage() {
         err.message ||
         'Something went wrong.';
       setError(msg);
-      setPassword(''); // Clear password on error; keep email so user doesn't retype it
     } finally {
       setLoading(false);
     }
@@ -324,7 +323,7 @@ export default function LoginPage() {
               type="password"
               placeholder="New password (min 8 characters)"
               value={newPassword}
-              onChange={e => { setNewPassword(e.target.value); setError(''); }}
+              onChange={e => setNewPassword(e.target.value)}
               required
               autoComplete="new-password"
               minLength={8}
@@ -334,7 +333,7 @@ export default function LoginPage() {
               type="password"
               placeholder="Confirm new password"
               value={confirmPassword}
-              onChange={e => { setConfirmPassword(e.target.value); setError(''); }}
+              onChange={e => setConfirmPassword(e.target.value)}
               required
               autoComplete="new-password"
               style={inputStyle(!!error && error.toLowerCase().includes('match'))}
@@ -422,7 +421,7 @@ export default function LoginPage() {
                 type="email"
                 placeholder="Email address"
                 value={email}
-                onChange={(e) => { setEmail(e.target.value); setError(''); }}
+                onChange={(e) => setEmail(e.target.value)}
                 required
                 autoComplete="email"
                 style={inputStyle(!!error)}
@@ -431,7 +430,7 @@ export default function LoginPage() {
                 type="password"
                 placeholder={mode === 'signup' ? 'Password (min 8 characters)' : 'Password'}
                 value={password}
-                onChange={(e) => { setPassword(e.target.value); setError(''); }}
+                onChange={(e) => setPassword(e.target.value)}
                 required
                 autoComplete={mode === 'signup' ? 'new-password' : 'current-password'}
                 minLength={8}
